@@ -68,11 +68,14 @@ func Test1(w http.ResponseWriter, r *http.Request) {
 	// 2 parse array into linkedList
 	linkedList := ParseArrayIntoLinkedList(object.Array)
 	linkedList.ShowValue()
-	w.Header().Set("context/type", "application/json")
-	err = json.NewEncoder(w).Encode(&linkedList)
+	w.Header().Set("Content-Type", "application/json")
+	data, err := json.Marshal(&linkedList)
+	// err = json.NewEncoder(w).Encode(&linkedList)
 	if err != nil {
 		http.Error(w, jsonParseError, http.StatusInternalServerError)
 	}
+	w.WriteHeader(http.StatusCreated)
+	w.Write(data)
 }
 
 func ParseArrayIntoLinkedList(arr []interface{}) *Node {

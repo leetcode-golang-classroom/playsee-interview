@@ -32,8 +32,8 @@ tail: dd
 	handler := http.NewServeMux()
 	handler.HandleFunc("/api-test", main.RequestMiddleware(main.Test1))
 	handler.ServeHTTP(rr, req)
-	if status := rr.Code; status != http.StatusOK {
-		t.Errorf("handler return wrong status code: got %v want %v", status, http.StatusOK)
+	if status := rr.Code; status != http.StatusCreated {
+		t.Errorf("handler return wrong status code: got %v want %v", status, http.StatusCreated)
 	}
 	var result main.Node
 	json.NewDecoder(rr.Body).Decode(&result)
