@@ -36,7 +36,10 @@ tail: dd
 		t.Errorf("handler return wrong status code: got %v want %v", status, http.StatusCreated)
 	}
 	var result main.Node
-	json.NewDecoder(rr.Body).Decode(&result)
+	err = json.NewDecoder(rr.Body).Decode(&result)
+	if err != nil {
+		t.Error(err)
+	}
 	if strings.Compare(result.ToString(), expectResult) != 0 {
 		t.Errorf("result %v, expect %v", result.ToString(), expectResult)
 	}

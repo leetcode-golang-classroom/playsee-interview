@@ -9,6 +9,7 @@ import (
 var (
 	payloadParseError = "payload parse error"
 	jsonParseError    = "json parse error"
+	writeBufferError  = "write buffer error"
 )
 
 type InputObject struct {
@@ -17,10 +18,6 @@ type InputObject struct {
 type Node struct {
 	Val  interface{}
 	Next *Node
-}
-
-type OutputResponse struct {
-	Result *Node `json:"Array"`
 }
 
 func (n *Node) ToString() string {
@@ -75,7 +72,10 @@ func Test1(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, jsonParseError, http.StatusInternalServerError)
 	}
 	w.WriteHeader(http.StatusCreated)
-	w.Write(data)
+	_, err = w.Write(data)
+	if err != nil {
+		http.Error(w, writeBufferError, http.StatusInternalServerError)
+	}
 }
 
 func ParseArrayIntoLinkedList(arr []interface{}) *Node {
